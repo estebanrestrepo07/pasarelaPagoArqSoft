@@ -134,6 +134,13 @@ public class TsTransaccion implements Serializable {
     public void setMaFranquicias(MaFranquicias maFranquicias) {
         this.maFranquicias = maFranquicias;
     }
+    
+    public String getCliente(){return this.tsCliente.getCtNombre(); }
+    public void setCliente(int idCliente){this.tsCliente=new TsCliente(idCliente);}
+    
+    
+    public String getFranquicia(){return this.maFranquicias.getFqNombre();}
+    public void setFranquicia(int franquiciaId){this.maFranquicias=new MaFranquicias(franquiciaId);}
 
     @Override
     public int hashCode() {
