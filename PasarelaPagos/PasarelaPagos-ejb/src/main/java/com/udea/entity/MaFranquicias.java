@@ -51,8 +51,8 @@ public class MaFranquicias implements Serializable {
     private BigInteger fqRangoInf;
     @Column(name = "fq_rango_su")
     private BigInteger fqRangoSu;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idFranquicia")
-    private Collection<TsFranquiciaTransaccion> tsFranquiciaTransaccionCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "maFranquicias")
+    private Collection<TsTransaccion> tsTransaccionCollection;
 
     public MaFranquicias() {
     }
@@ -94,12 +94,12 @@ public class MaFranquicias implements Serializable {
     }
 
     @XmlTransient
-    public Collection<TsFranquiciaTransaccion> getTsFranquiciaTransaccionCollection() {
-        return tsFranquiciaTransaccionCollection;
+    public Collection<TsTransaccion> getTsTransaccionCollection() {
+        return tsTransaccionCollection;
     }
 
-    public void setTsFranquiciaTransaccionCollection(Collection<TsFranquiciaTransaccion> tsFranquiciaTransaccionCollection) {
-        this.tsFranquiciaTransaccionCollection = tsFranquiciaTransaccionCollection;
+    public void setTsTransaccionCollection(Collection<TsTransaccion> tsTransaccionCollection) {
+        this.tsTransaccionCollection = tsTransaccionCollection;
     }
 
     @Override

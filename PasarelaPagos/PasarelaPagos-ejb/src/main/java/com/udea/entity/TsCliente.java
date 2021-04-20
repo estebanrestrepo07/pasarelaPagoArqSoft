@@ -8,7 +8,6 @@ package com.udea.entity;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -56,8 +55,6 @@ public class TsCliente implements Serializable {
     @Size(max = 45)
     @Column(name = "ct_celular")
     private String ctCelular;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTransaccion")
-    private Collection<TsFranquiciaTransaccion> tsFranquiciaTransaccionCollection;
     @OneToMany(mappedBy = "tsCliente")
     private Collection<TsTransaccion> tsTransaccionCollection;
 
@@ -106,15 +103,6 @@ public class TsCliente implements Serializable {
 
     public void setCtCelular(String ctCelular) {
         this.ctCelular = ctCelular;
-    }
-
-    @XmlTransient
-    public Collection<TsFranquiciaTransaccion> getTsFranquiciaTransaccionCollection() {
-        return tsFranquiciaTransaccionCollection;
-    }
-
-    public void setTsFranquiciaTransaccionCollection(Collection<TsFranquiciaTransaccion> tsFranquiciaTransaccionCollection) {
-        this.tsFranquiciaTransaccionCollection = tsFranquiciaTransaccionCollection;
     }
 
     @XmlTransient

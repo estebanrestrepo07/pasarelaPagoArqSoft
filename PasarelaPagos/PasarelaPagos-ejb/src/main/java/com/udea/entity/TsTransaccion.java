@@ -10,10 +10,8 @@ import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -34,19 +32,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TsTransaccion.findAll", query = "SELECT t FROM TsTransaccion t")
-    , @NamedQuery(name = "TsTransaccion.findByTsId", query = "SELECT t FROM TsTransaccion t WHERE t.tsId = :tsId")
+    , @NamedQuery(name = "TsTransaccion.findByTsId", query = "SELECT t FROM TsTransaccion t WHERE t.tsTransaccionPK.tsId = :tsId")
     , @NamedQuery(name = "TsTransaccion.findByTsFecha", query = "SELECT t FROM TsTransaccion t WHERE t.tsFecha = :tsFecha")
     , @NamedQuery(name = "TsTransaccion.findByTsNumTarjeta", query = "SELECT t FROM TsTransaccion t WHERE t.tsNumTarjeta = :tsNumTarjeta")
     , @NamedQuery(name = "TsTransaccion.findByTsNombreTitula", query = "SELECT t FROM TsTransaccion t WHERE t.tsNombreTitula = :tsNombreTitula")
-    , @NamedQuery(name = "TsTransaccion.findByTsMonto", query = "SELECT t FROM TsTransaccion t WHERE t.tsMonto = :tsMonto")})
+    , @NamedQuery(name = "TsTransaccion.findByTsMonto", query = "SELECT t FROM TsTransaccion t WHERE t.tsMonto = :tsMonto")
+    , @NamedQuery(name = "TsTransaccion.findByMaFranquiciasFqId", query = "SELECT t FROM TsTransaccion t WHERE t.tsTransaccionPK.maFranquiciasFqId = :maFranquiciasFqId")})
 public class TsTransaccion implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "ts_id")
-    private Integer tsId;
+    @EmbeddedId
+    protected TsTransaccionPK tsTransaccionPK;
     @Basic(optional = false)
     @NotNull
     @Column(name = "ts_fecha")
@@ -63,25 +59,32 @@ public class TsTransaccion implements Serializable {
     @JoinColumn(name = "ts_cliente", referencedColumnName = "ct_id")
     @ManyToOne
     private TsCliente tsCliente;
+    @JoinColumn(name = "ma_franquicias_fq_id", referencedColumnName = "fq_id", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private MaFranquicias maFranquicias;
 
     public TsTransaccion() {
     }
 
-    public TsTransaccion(Integer tsId) {
-        this.tsId = tsId;
+    public TsTransaccion(TsTransaccionPK tsTransaccionPK) {
+        this.tsTransaccionPK = tsTransaccionPK;
     }
 
-    public TsTransaccion(Integer tsId, Date tsFecha) {
-        this.tsId = tsId;
+    public TsTransaccion(TsTransaccionPK tsTransaccionPK, Date tsFecha) {
+        this.tsTransaccionPK = tsTransaccionPK;
         this.tsFecha = tsFecha;
     }
 
-    public Integer getTsId() {
-        return tsId;
+    public TsTransaccion(int tsId, int maFranquiciasFqId) {
+        this.tsTransaccionPK = new TsTransaccionPK(tsId, maFranquiciasFqId);
     }
 
-    public void setTsId(Integer tsId) {
-        this.tsId = tsId;
+    public TsTransaccionPK getTsTransaccionPK() {
+        return tsTransaccionPK;
+    }
+
+    public void setTsTransaccionPK(TsTransaccionPK tsTransaccionPK) {
+        this.tsTransaccionPK = tsTransaccionPK;
     }
 
     public Date getTsFecha() {
@@ -124,10 +127,18 @@ public class TsTransaccion implements Serializable {
         this.tsCliente = tsCliente;
     }
 
+    public MaFranquicias getMaFranquicias() {
+        return maFranquicias;
+    }
+
+    public void setMaFranquicias(MaFranquicias maFranquicias) {
+        this.maFranquicias = maFranquicias;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (tsId != null ? tsId.hashCode() : 0);
+        hash += (tsTransaccionPK != null ? tsTransaccionPK.hashCode() : 0);
         return hash;
     }
 
@@ -138,7 +149,7 @@ public class TsTransaccion implements Serializable {
             return false;
         }
         TsTransaccion other = (TsTransaccion) object;
-        if ((this.tsId == null && other.tsId != null) || (this.tsId != null && !this.tsId.equals(other.tsId))) {
+        if ((this.tsTransaccionPK == null && other.tsTransaccionPK != null) || (this.tsTransaccionPK != null && !this.tsTransaccionPK.equals(other.tsTransaccionPK))) {
             return false;
         }
         return true;
@@ -146,7 +157,7 @@ public class TsTransaccion implements Serializable {
 
     @Override
     public String toString() {
-        return "com.udea.entity.TsTransaccion[ tsId=" + tsId + " ]";
+        return "com.udea.entity.TsTransaccion[ tsTransaccionPK=" + tsTransaccionPK + " ]";
     }
     
 }
