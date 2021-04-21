@@ -6,12 +6,13 @@
 package com.udea.entity;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -32,59 +33,65 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TsTransaccion.findAll", query = "SELECT t FROM TsTransaccion t")
-    , @NamedQuery(name = "TsTransaccion.findByTsId", query = "SELECT t FROM TsTransaccion t WHERE t.tsTransaccionPK.tsId = :tsId")
+    , @NamedQuery(name = "TsTransaccion.findByTsId", query = "SELECT t FROM TsTransaccion t WHERE t.tsId = :tsId")
     , @NamedQuery(name = "TsTransaccion.findByTsFecha", query = "SELECT t FROM TsTransaccion t WHERE t.tsFecha = :tsFecha")
     , @NamedQuery(name = "TsTransaccion.findByTsNumTarjeta", query = "SELECT t FROM TsTransaccion t WHERE t.tsNumTarjeta = :tsNumTarjeta")
     , @NamedQuery(name = "TsTransaccion.findByTsNombreTitula", query = "SELECT t FROM TsTransaccion t WHERE t.tsNombreTitula = :tsNombreTitula")
-    , @NamedQuery(name = "TsTransaccion.findByTsMonto", query = "SELECT t FROM TsTransaccion t WHERE t.tsMonto = :tsMonto")
-    , @NamedQuery(name = "TsTransaccion.findByMaFranquiciasFqId", query = "SELECT t FROM TsTransaccion t WHERE t.tsTransaccionPK.maFranquiciasFqId = :maFranquiciasFqId")})
+    , @NamedQuery(name = "TsTransaccion.findByTsMonto", query = "SELECT t FROM TsTransaccion t WHERE t.tsMonto = :tsMonto")})
 public class TsTransaccion implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected TsTransaccionPK tsTransaccionPK;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "ts_id")
+    private Integer tsId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "ts_fecha")
     @Temporal(TemporalType.TIMESTAMP)
     private Date tsFecha;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "ts_num_tarjeta")
-    private BigInteger tsNumTarjeta;
-    @Size(max = 50)
+    private long tsNumTarjeta;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
     @Column(name = "ts_nombre_titula")
     private String tsNombreTitula;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "ts_monto")
-    private Double tsMonto;
+    private double tsMonto;
     @JoinColumn(name = "ts_cliente", referencedColumnName = "ct_id")
-    @ManyToOne
-    private TsCliente tsCliente;
-    @JoinColumn(name = "ma_franquicias_fq_id", referencedColumnName = "fq_id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private MaFranquicias maFranquicias;
+    private TsCliente tsCliente;
+    @JoinColumn(name = "ma_franquicias_fq_id", referencedColumnName = "fq_id")
+    @ManyToOne(optional = false)
+    private MaFranquicias maFranquiciasFqId;
 
     public TsTransaccion() {
     }
 
-    public TsTransaccion(TsTransaccionPK tsTransaccionPK) {
-        this.tsTransaccionPK = tsTransaccionPK;
+    public TsTransaccion(Integer tsId) {
+        this.tsId = tsId;
     }
 
-    public TsTransaccion(TsTransaccionPK tsTransaccionPK, Date tsFecha) {
-        this.tsTransaccionPK = tsTransaccionPK;
+    public TsTransaccion(Integer tsId, Date tsFecha, long tsNumTarjeta, String tsNombreTitula, double tsMonto) {
+        this.tsId = tsId;
         this.tsFecha = tsFecha;
+        this.tsNumTarjeta = tsNumTarjeta;
+        this.tsNombreTitula = tsNombreTitula;
+        this.tsMonto = tsMonto;
     }
 
-    public TsTransaccion(int tsId, int maFranquiciasFqId) {
-        this.tsTransaccionPK = new TsTransaccionPK(tsId, maFranquiciasFqId);
+    public Integer getTsId() {
+        return tsId;
     }
 
-    public TsTransaccionPK getTsTransaccionPK() {
-        return tsTransaccionPK;
-    }
-
-    public void setTsTransaccionPK(TsTransaccionPK tsTransaccionPK) {
-        this.tsTransaccionPK = tsTransaccionPK;
+    public void setTsId(Integer tsId) {
+        this.tsId = tsId;
     }
 
     public Date getTsFecha() {
@@ -95,11 +102,11 @@ public class TsTransaccion implements Serializable {
         this.tsFecha = tsFecha;
     }
 
-    public BigInteger getTsNumTarjeta() {
+    public long getTsNumTarjeta() {
         return tsNumTarjeta;
     }
 
-    public void setTsNumTarjeta(BigInteger tsNumTarjeta) {
+    public void setTsNumTarjeta(long tsNumTarjeta) {
         this.tsNumTarjeta = tsNumTarjeta;
     }
 
@@ -111,11 +118,11 @@ public class TsTransaccion implements Serializable {
         this.tsNombreTitula = tsNombreTitula;
     }
 
-    public Double getTsMonto() {
+    public double getTsMonto() {
         return tsMonto;
     }
 
-    public void setTsMonto(Double tsMonto) {
+    public void setTsMonto(double tsMonto) {
         this.tsMonto = tsMonto;
     }
 
@@ -127,25 +134,25 @@ public class TsTransaccion implements Serializable {
         this.tsCliente = tsCliente;
     }
 
-    public MaFranquicias getMaFranquicias() {
-        return maFranquicias;
+    public MaFranquicias getMaFranquiciasFqId() {
+        return maFranquiciasFqId;
     }
 
-    public void setMaFranquicias(MaFranquicias maFranquicias) {
-        this.maFranquicias = maFranquicias;
+    public void setMaFranquiciasFqId(MaFranquicias maFranquiciasFqId) {
+        this.maFranquiciasFqId = maFranquiciasFqId;
     }
     
-    public String getCliente(){return this.tsCliente.getCtNombre(); }
-    public void setCliente(int idCliente){this.tsCliente=new TsCliente(idCliente);}
     
+    public String getCliente(){return this.tsCliente.getCtNumeroid();}
+    public void seCliente(int clienteId){this.tsCliente=new TsCliente(clienteId);}
     
-    public String getFranquicia(){return this.maFranquicias.getFqNombre();}
-    public void setFranquicia(int franquiciaId){this.maFranquicias=new MaFranquicias(franquiciaId);}
+    public String getFranquicia(){return this.maFranquiciasFqId.getFqNombre();}
+    public void setFranquicia(int franquiciaId){this.maFranquiciasFqId=new MaFranquicias(franquiciaId);}
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (tsTransaccionPK != null ? tsTransaccionPK.hashCode() : 0);
+        hash += (tsId != null ? tsId.hashCode() : 0);
         return hash;
     }
 
@@ -156,7 +163,7 @@ public class TsTransaccion implements Serializable {
             return false;
         }
         TsTransaccion other = (TsTransaccion) object;
-        if ((this.tsTransaccionPK == null && other.tsTransaccionPK != null) || (this.tsTransaccionPK != null && !this.tsTransaccionPK.equals(other.tsTransaccionPK))) {
+        if ((this.tsId == null && other.tsId != null) || (this.tsId != null && !this.tsId.equals(other.tsId))) {
             return false;
         }
         return true;
@@ -164,7 +171,7 @@ public class TsTransaccion implements Serializable {
 
     @Override
     public String toString() {
-        return "com.udea.entity.TsTransaccion[ tsTransaccionPK=" + tsTransaccionPK + " ]";
+        return "com.udea.entity.TsTransaccion[ tsId=" + tsId + " ]";
     }
     
 }
