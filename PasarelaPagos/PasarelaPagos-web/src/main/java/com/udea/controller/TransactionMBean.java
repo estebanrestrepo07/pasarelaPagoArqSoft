@@ -41,5 +41,37 @@ public class TransactionMBean implements Serializable {
      */
     public TransactionMBean() {
     }
+
+    //Retorna la lista de las franquicias
+    public List<MaFranquicias> getFreanquicias(){
+        if((maFranquicias == null) || (maFranquicias.isEmpty()))
+            refrescar();
+        return maFranquicias;
+    }
     
+    //Retorna el detalle del cliente en el formulario
+    public TsCliente getTsCliente(){
+        return trCliente;
+    }
+    
+    //Retorna el detalle de la transaccion en el formulario
+    public TsTransaccion getTsTransaccion(){
+        return tsTransaccion;
+    }
+    
+    //Action Handler - Actualiza el  modelo transacción en la BDD
+    //Se llama cuando se presiona el botón "Guardar" del formulario
+    public String ingresarTransaccion(){
+        tsTransaccionManager.createTransaccion(tsTransaccion);
+        return "SAVED";        
+    }
+    
+    //Action Handler - retorno hacia la vista de registro transaccion
+    public String retorno(){
+        return "NEW";
+    }
+    
+    public void refrescar(){
+        maFranquicias = maFranquiciasManager.getFranquicias();
+    }
 }
