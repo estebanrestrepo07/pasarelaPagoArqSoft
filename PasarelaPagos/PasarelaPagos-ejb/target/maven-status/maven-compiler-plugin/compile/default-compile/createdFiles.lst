@@ -1,0 +1,14 @@
+com\udea\entity\TsCliente.class
+com\udea\entity\TsTransaccion.class
+com\udea\NewSessionBean.class
+com\udea\entity\MaFranquicias_.class
+com\udea\session\MaFranquiciasManagerLocal.class
+com\udea\entity\TsCliente_.class
+com\udea\session\MaFranquiciasManager.class
+com\udea\session\TsTransaccionManager.class
+com\udea\session\TsTransaccionManagerLocal.class
+com\udea\entity\MaFranquicias.class
+com\udea\entity\TsTransaccion_.class
+com\udea\session\TsClienteManager.class
+com\udea\session\TsClienteManagerLocal.class
+.netbeans_automatic_build
